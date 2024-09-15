@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "332619e5-d8e6-48fd-917e-eb9933c32fd3",
+		"name": "go_auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34045928"
+	},
+	"item": [
+		{
+			"name": "Cadastro Usuário",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"jpcadinelli\",\n    \"password\": \"123deOliveira4!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/register",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login Usuário",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Parse a resposta JSON",
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"// Verifica se o token de acesso foi retornado",
+							"if (jsonData.token) {",
+							"    // Define o token de acesso como uma variável global",
+							"    pm.globals.set(\"TOKEN_GO_AUTH\", jsonData.token);",
+							"} else {",
+							"    // Se não houver um token de acesso, imprime uma mensagem de erro no console",
+							"    console.error(\"Erro ao obter o token de acesso. Verifique as credenciais do usuário.\");",
+							"}",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"jpcadinelli\",\n    \"password\": \"123deOliveira4!\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Valida Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpwY2FkaW5lbGxpIiwiZXhwIjoxNzI2NTIyMDE1fQ.N8HIhy4y8X4Svu35bdqNo6gAi8BmaoUgG9s6_rqVjyg",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/protected",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"protected"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
