@@ -1,14 +1,15 @@
-package controller
+package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"go_auth/models"
+	"go_auth/internal/domain/model"
+	"go_auth/internal/security"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
 )
 
 func Register(c *gin.Context) {
-	var input models.User
+	var input model.User
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -21,7 +22,7 @@ func Register(c *gin.Context) {
 	}
 	input.Password = string(hash)
 
-	if err := models.DB.Create(&input).Error; err != nil {
+	if err := model.DB.Create(&input).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
@@ -29,14 +30,14 @@ func Register(c *gin.Context) {
 }
 
 func Login(c *gin.Context) {
-	var input models.User
+	var input model.User
 	if err := c.BindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	var user models.User
-	if err := models.DB.Where("username = ?", input.Username).First(&user).Error; err != nil {
+	var user model.User
+	if err := model.DB.Where("username = ?", input.Username).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid username or password"})
 		return
 	}
@@ -46,7 +47,7 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := GenerateToken(user.Username)
+	token, err := security.GenerateToken(user.Username)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not generate token"})
 		return

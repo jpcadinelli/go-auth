@@ -2,19 +2,19 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"go_auth/controller"
-	"go_auth/middleware"
-	"go_auth/models"
+	"go_auth/internal/domain/model"
+	"go_auth/internal/interface/http/handler"
+	"go_auth/internal/interface/http/middleware"
 	"net/http"
 )
 
 func main() {
-	models.InitDatabase()
-	defer models.DB.Close()
+	model.InitDatabase()
+	defer model.DB.Close()
 
 	r := gin.Default()
-	r.POST("/register", controller.Register)
-	r.POST("/login", controller.Login)
+	r.POST("/register", handler.Register)
+	r.POST("/login", handler.Login)
 	r.GET("/protected", middleware.AuthMiddleware(), ProtectedEndpoint)
 
 	r.Run(":8080")
